@@ -1,0 +1,1 @@
+PRINT "GANO TU PRIMA "
