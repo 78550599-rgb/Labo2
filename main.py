@@ -1,9 +1,11 @@
 # main.py
 
 print("=== Depurar RPG Live Games ===")
+print("hola jorgeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+
 
 nombre = input("Ingresa tu nombre: ")
-print("\nhttps://github.com/78550599-rgb/Labo2.git")
+print("\nhttps://github.com/78550599-rgb/Labo2.githttps://github.com/78550599-rgb/Labo2.git")
 print(f"Bienvenido, {nombre}.")
 
 nivel = 1
