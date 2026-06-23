@@ -1,26 +1,24 @@
-# dfa_cli_compacto.py — version reducida
-import sys
-
-import matplotlib.pyplot as plt
-import networkx as nx
+# dfa_cli_compacto.py - version reducida
+import sys, matplotlib.pyplot as plt, networkx as nx
 from matplotlib.patches import FancyArrowPatch
 
 # === Definicion del DFA ===
-states = {"q0", "q1", "q2", "q3", "q4"}
-alphabet = {"a", "b"}
+states = {"q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8"}
+alphabet = {"a", "b", "c"}
 delta = {
-    ("q0", "a"): "q1",
-    ("q1", "a"): "q4",
-    ("q1", "b"): "q4",
-    ("q2", "a"): "q0",
-    ("q2", "b"): "q1",
-    ("q3", "b"): "q2",
-    ("q4", "a"): "q1",
-    ("q4", "b"): "q3",
+    ("q1", "a"): "q2",
+    ("q2", "b"): "q3",
+    ("q3", "b"): "q4",
+    ("q3", "c"): "q8",
+    ("q4", "b"): "q6",
+    ("q4", "c"): "q5",
+    ("q5", "c"): "q7",
+    ("q6", "b"): "q7",
+    ("q7", "a"): "q4",
+    ("q7", "c"): "q4",
 }
 
-q0, F = "q0", {"q4"}
-
+q0, F = "q1", {"q8"}
 
 # === Simulacion ===
 def run(s):
@@ -32,14 +30,12 @@ def run(s):
         steps.append(q)
     return steps, steps[-1] in F
 
-
 # === Grafo y layout ===
 G = nx.MultiDiGraph()
 G.add_nodes_from(states)
 for (q, a), p in delta.items():
     G.add_edge(q, p, key=a, label=a)
 pos = nx.spring_layout(G, seed=7)
-
 
 # === Dibujo por paso ===
 def _mid(p1, p2, o=0.10):
@@ -49,7 +45,6 @@ def _mid(p1, p2, o=0.10):
     nx_, ny_ = -dy, dx
     L = (nx_**2 + ny_**2) ** 0.5 or 1
     return mx + o * nx_ / L, my + o * ny_ / L
-
 
 def draw_step(current, idx, sym=None):
     plt.clf()
@@ -63,7 +58,6 @@ def draw_step(current, idx, sym=None):
         edgecolors="black",
     )
     nx.draw_networkx_labels(G, pos)
-
     seen = {}
     for u, v, k, d in G.edges(keys=True, data=True):
         if u == v:
@@ -97,10 +91,9 @@ def draw_step(current, idx, sym=None):
     plt.title(f"Paso {idx}: {current}" + (f" | '{sym}'" if sym else ""))
     plt.pause(1.0)
 
-
 # === core/main ===
 if __name__ == "__main__":
-    s = sys.argv[1] if len(sys.argv) > 1 else input("Cadena (a/b): ").strip()
+    s = sys.argv[1] if len(sys.argv) > 1 else input("Cadena (a/b/c): ").strip()
     try:
         steps, ok = run(s)
         print("ACEPTA" if ok else "RECHAZA", f"(estado final: {steps[-1]})")
